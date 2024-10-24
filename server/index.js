@@ -3,14 +3,19 @@
 import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import bodyParser from 'body-parser';
 
 import userRouter from './routes/user.route.js'
+import authRouter from './routes/auth.route.js'
 
 dotenv.config();
 
 const app = express()
 const PORT = 3000
 
+app.use(bodyParser.json())
+
+app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
 mongoose.connect(process.env.MONGO_URL).then(()=>{
