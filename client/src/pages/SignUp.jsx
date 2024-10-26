@@ -28,22 +28,18 @@ export const SignUp = () => {
       headers:{ "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     }).then((response)=>{
-      console.log("Response: ", response)
       return response.json()
     }).then((data)=>{
       if(data.success === false){
         setLoading(false)
         setError(data.message)
-        console.log("FAILED: ", data.message)
       }else{
         setLoading(false)
         navigate("/sign-in")
-        console.log("SUCCESS: ", data.message)
       }
     }).catch((error)=>{
       setLoading(false)
       setError(error.message)
-      console.log(error.message)
     })
   }
 
@@ -54,7 +50,9 @@ export const SignUp = () => {
         <input className='p-4 border rounded-lg focus:outline-none' id='username' placeholder='username' type='text' onChange={handleChange} value={formData.username || ''} />
         <input className='p-4 border rounded-lg focus:outline-none' id='email' placeholder='email' type='text' onChange={handleChange} value={formData.email || ''} />
         <input className='p-4 border rounded-lg focus:outline-none' id='password' placeholder='password' type='password' onChange={handleChange} value={formData.password || ''} />
-        <button disabled={loading} className='bg-slate-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>Sign Up</button>
+        <button disabled={loading} className='bg-slate-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
+          { loading ? "Loading..." : "Sign Up" }
+        </button>
       </form>
         <button className='bg-red-700 w-full mt-4 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>continue with google</button>
       <p className='mt-4'>Have an account? <span className='text-sky-600'><Link to="/sign-in">Sign in</Link></span></p>
