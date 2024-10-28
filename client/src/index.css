@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 
+@layer components{
+    .btn{
+        @apply bg-sky-500 p-2 text-white;
+    }
+}
+
 body{
     background: rgb(241 245 241);
 }
