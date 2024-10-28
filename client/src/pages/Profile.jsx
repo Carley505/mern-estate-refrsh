@@ -48,11 +48,9 @@ export const Profile = () => {
 
   return (
     <div className='p-4 max-w-lg mx-auto'>
-      <div className='flex flex-col items-center mb-4'>
         <h2 className='text-center font-semibold text-3xl my-7'>Profile</h2>
-        <img className='h-16 w-16 rounded-full ring-2' src={currentUser.avatar} alt='avatar'/>
-      </div>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+      <img className='h-24 w-24 object-cover cursor-pointer rounded-full ring-2 self-center' src={currentUser.avatar} alt='avatar'/>
         <input className='p-4 border rounded-lg focus:outline-none' id='username' placeholder='username' type='text' onChange={handleChange} value={formData.username || ''} />
         <input className='p-4 border rounded-lg focus:outline-none' id='email' placeholder='email' type='text' onChange={handleChange} value={formData.email || ''} />
         <input className='p-4 border rounded-lg focus:outline-none' id='password' placeholder='password' type='password' onChange={handleChange} value={formData.password || ''} />
@@ -64,8 +62,8 @@ export const Profile = () => {
         </button>
       </form>
       <div className='text-red-700 mt-4 flex justify-between'>
-        <button>Delete Account</button>
-        <button>Sign Out</button>
+        <span className='cursor-pointer'>Delete Account</span>
+        <span className='cursor-pointer'>Sign Out</span>
       </div>
       { error && <p className='text-red-600 mt-4'>{error}</p> }
     </div>
