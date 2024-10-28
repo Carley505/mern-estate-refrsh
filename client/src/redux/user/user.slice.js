@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const userSlice = createSlice({
-    name: "user",
+    name: 'user',
     initialState,
     reducers: {
         signInStart: (state) =>{
@@ -24,9 +24,22 @@ export const userSlice = createSlice({
             state.loading = false;
             state.error = null;
         },
+        updateStart: (state) =>{
+            state.loading = true;
+            state.error = null;
+        },
+        updateFailure: (state, action) =>{
+            state.loading = false;
+            state.error = action.payload;
+        },
+        updateSuccess: (state, action) =>{
+            state.loading = false;
+            state.error = null;
+            atate.currentUser = action.payload;
+        },
     },
 });
 
-export const { signInStart, signInFailure, signInSuccess } = userSlice.actions
+export const { signInStart, signInFailure, signInSuccess, updateStart, updateFailure, updateSuccess } = userSlice.actions
 
 export default userSlice.reducer
