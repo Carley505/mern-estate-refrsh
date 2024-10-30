@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { auth, provider, signInWithPopup } from '../firebase'
-import { signInStart, signInFailure, signInSuccess } from '../redux/user/user.slice';
+import { signInStart, signInFailure, signInSuccess } from '../redux/appSlices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
 

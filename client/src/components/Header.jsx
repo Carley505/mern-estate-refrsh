@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux"
 
 export const Header = () => {
-  const { currentUser } = useSelector((state)=>state.user.user)
+  const { currentUser } = useSelector((state)=>state.user)
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="max-w-6xl mx-auto p-3 md:h-16 flex flex-row justify-between items-center">
