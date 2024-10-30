@@ -18,9 +18,9 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/about' element={<About/>}/>
-        <Route path='/create-listing' element={<CreateListing/>}/>
         <Route element={<PrivateRoute/>}>
          <Route path='/profile' element={<Profile/>}/>
+         <Route path='/create-listing' element={<CreateListing/>}/>
         </Route>
         <Route path='/sign-in' element={<SignIn/>}/>
         <Route path='/sign-up' element={<SignUp/>}/>

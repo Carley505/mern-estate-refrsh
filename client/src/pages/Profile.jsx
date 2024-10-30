@@ -52,9 +52,6 @@ export const Profile = () => {
     })
   }
 
-  const handleCreateListing = async() =>{
-
-  }
 
   const handleDelete = async() =>{
     const url = `/api/user/delete/${currentUser._id}`
@@ -149,9 +146,9 @@ export const Profile = () => {
         <button disabled={loading} className='bg-slate-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
           { loading ? "Loading..." : "Update" }
         </button>
-        <button type='button' onClick={handleCreateListing} disabled={loading} className='bg-green-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
-          { loading ? "Loading..." : "Create Listing" }
-        </button>
+        <Link className='bg-green-700 text-white p-4 text-center rounded-lg uppercase hover:opacity-95 disabled:opacity-80' to="/create-listing">
+          { "Create Listing" }
+        </Link>
       </form>
       <div className='text-red-700 mt-4 flex justify-between'>
         <span className='cursor-pointer' onClick={handleDelete}>Delete Account</span>
