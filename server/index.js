@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser"
 
 import authRouter from "./routes/auth.route.js"
 import userRouter from "./routes/user.route.js"
+import listingRouter from "./routes/listing.route.js"
 
 
 const app = express();
@@ -27,6 +28,7 @@ try {
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
+app.use('/api/listing', listingRouter);
 
 app.listen(PORT, ()=>{
     console.log(`Server running on port ${PORT}...`)
