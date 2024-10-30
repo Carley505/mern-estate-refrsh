@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 
 import authRouter from "./routes/auth.route.js"
 import userRouter from "./routes/user.route.js"
@@ -15,6 +16,7 @@ const PORT = 3000;
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(cookieParser())
 
 try {
     await mongoose.connect(process.env.MONGO_URL);

@@ -29,10 +29,10 @@ export const Profile = () => {
     e.preventDefault()
 
     dispatch(updateStart())
-    const url = "/api/auth/update-user"
+    const url = `/api/user/update/${currentUser._id}`
 
     await fetch(url, {
-      method: "PATCH",
+      method: "POST",
       headers:{ "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     }).then((response)=>{
