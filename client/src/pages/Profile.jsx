@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
-import { updateStart, updateFailure, updateSuccess } from '../redux/appSlices/userSlice';
+import { updateStart, updateFailure, updateSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess } from '../redux/appSlices/userSlice';
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from "firebase/storage"
 import { app } from '../firebase';
 
@@ -13,13 +13,12 @@ export const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formUpdate, setFormUpdate] = useState(false)
 
-  console.log(formData)
-
   const fileRef = useRef(null);
 
   const { loading, error, currentUser } = useSelector((state)=>state.user)
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) =>{
     setFormData({
@@ -55,6 +54,30 @@ export const Profile = () => {
 
   const handleCreateListing = async() =>{
 
+  }
+
+  const handleDelete = async() =>{
+    const url = `/api/user/delete/${currentUser._id}`
+
+    dispatch(deleteUserStart())
+    await fetch(url, 
+     {
+      method: "DELETE",
+     }
+    ).then((response)=>{
+      return response.json()
+    }).then((data)=>{
+      if(data.success === false){
+        dispatch(deleteUserFailure(data.message))
+        return;
+      }else{
+        navigate("/sign-up")
+        dispatch(deleteUserSuccess(data))
+        console.log(data);
+      }
+    }).catch((error)=>{
+      dispatch(deleteUserFailure(error.message))
+    })
   }
 
   useEffect(()=>{
@@ -112,7 +135,7 @@ export const Profile = () => {
         </button>
       </form>
       <div className='text-red-700 mt-4 flex justify-between'>
-        <span className='cursor-pointer'>Delete Account</span>
+        <span className='cursor-pointer' onClick={handleDelete}>Delete Account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
       { error ? <p className='text-red-600 mt-4'>{error}</p> : '' }
