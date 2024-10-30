@@ -11,6 +11,9 @@ export const Profile = () => {
   const [file, setFile] = useState(undefined);
   const [fileUploadPerc, setFileUploadPerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [formUpdate, setFormUpdate] = useState(false)
+
+  console.log(formData)
 
   const fileRef = useRef(null);
 
@@ -40,8 +43,10 @@ export const Profile = () => {
     }).then((data)=>{
       if(data.success === false){
        dispatch(updateFailure(data.message))
+       return;
       }else{
         dispatch(updateSuccess(data))
+        setFormUpdate(true)
       }
     }).catch((error)=>{
       dispatch(updateFailure(error.message))
@@ -96,9 +101,9 @@ export const Profile = () => {
           (fileUploadPerc === 100) ? <span className='text-green-700'>Image Successfully Uploaded!</span> : ("")
         }
       </p>
-        <input className='p-4 border rounded-lg focus:outline-none' id='username' placeholder='username' type='text' onChange={handleChange} value={formData.username || ''} />
-        <input className='p-4 border rounded-lg focus:outline-none' id='email' placeholder='email' type='text' onChange={handleChange} value={formData.email || ''} />
-        <input className='p-4 border rounded-lg focus:outline-none' id='password' placeholder='password' type='password' onChange={handleChange} value={formData.password || ''} />
+        <input className='p-4 border rounded-lg focus:outline-none' id='username' placeholder='username' type='text' onChange={handleChange} defaultValue={currentUser.username}  />
+        <input className='p-4 border rounded-lg focus:outline-none' id='email' placeholder='email' type='text' onChange={handleChange} defaultValue={currentUser.email}  />
+        <input className='p-4 border rounded-lg focus:outline-none' id='password' placeholder='password' type='password' onChange={handleChange} />
         <button disabled={loading} className='bg-slate-700 text-white p-4 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
           { loading ? "Loading..." : "Update" }
         </button>
@@ -110,7 +115,8 @@ export const Profile = () => {
         <span className='cursor-pointer'>Delete Account</span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
-      { error && <p className='text-red-600 mt-4'>{error}</p> }
+      { error ? <p className='text-red-600 mt-4'>{error}</p> : '' }
+      { formUpdate ? <p className='text-green-700'>User updated Successfully.</p> : ''}
     </div>
   )
 }
