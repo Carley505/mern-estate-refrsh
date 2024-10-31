@@ -21,6 +21,7 @@ app.use(cookieParser())
 
 try {
     await mongoose.connect(process.env.MONGO_URL);
+    // await mongoose.connect("mongodb+srv://callistusngeywa:callistus@cluster0.fp4abir.mongodb.net/estate-one");
     console.log("Connection to database Established...")
 } catch (error) {
     console.log(error.message);
