@@ -24,6 +24,11 @@ const listingSchema = new Schema({
         type: Number,
         required: true,
     },
+    bathRooms: {
+        type: Number,
+        required: true,
+    }
+    ,
     bedRooms: {
         type: Number,
         required: true,
