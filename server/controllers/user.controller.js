@@ -57,3 +57,17 @@ export const getUserListings = async(req, res, next)=>{
         next(error)
     }
 }
+
+export const deleteUserListing = async(req, res, next)=>{
+    const userId = req.params.userId
+    const listingId = req.params.listingId
+
+    if(req.user.id !== userId) return next(errorHandler(401, "Only the User can delete."))
+    try {
+        const deltetedListing = await Listing.findByIdAndDelete({ _id: listingId })
+        if(!deltetedListing) return next(404, "Listing does Not exist.")
+        res.status(200).json('Listing has been deleted Succcessfully!')
+    } catch (error) {
+        next(error)
+    }
+}
