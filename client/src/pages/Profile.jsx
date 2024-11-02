@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   updateStart,
   updateFailure,
@@ -16,7 +16,6 @@ import {
   getDownloadURL,
   getStorage,
   ref,
-  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
@@ -281,7 +280,9 @@ export const Profile = () => {
                   </Link>
                   <div className="flex flex-col gap-2">
                     <button onClick={()=>handleDeleteUserListing(listing)} className="uppercase text-red-700" type="button">Delete</button>
+                   <Link to={`/update-listing/${listing._id}`}>
                     <button className="uppercase text-green-700" type="button">edit</button>
+                   </Link>
                   </div>
                 </div>
                 )

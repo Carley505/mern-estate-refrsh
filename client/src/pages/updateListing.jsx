@@ -1,10 +1,12 @@
+
+
 import { getDownloadURL, ref, getStorage, uploadBytesResumable } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateListing() {
+export default function UpdateListing() {
 
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -31,6 +33,7 @@ export default function CreateListing() {
   const {currentUser } = useSelector((state)=>state.user)
 
   const navigate = useNavigate()
+  const params = useParams()
 
   const [files, setFiles] = useState([])
 
@@ -110,7 +113,7 @@ export default function CreateListing() {
 
     if(formData.imageUrls.length < 1) return setError("You Must upload atleast one image!")
     if(formData.discountPrice > formData.regularPrice) return setError("Discount price Must be lower than Regular price.")
-    const url = '/api/listing/create';
+    const url = `/api/listing/update/${params.listingId}`;
     setLoading(true)
     setError(null)
     await fetch(url, {
@@ -138,10 +141,29 @@ export default function CreateListing() {
     })
   }
 
+  useEffect(()=>{
+    const listingId = params.listingId
+    const url = `/api/listing/getListing/${listingId}`
+    const fetchListing = async()=>{
+      await fetch(url).then((response)=>{
+        return response.json()
+      }).then((data)=>{
+        if(data.success === false){
+          console.log(data.message)
+        }else{
+          setFormData(data)
+        }
+      }).catch((error)=>{
+        console.log(error.message)
+      })
+    }
+    fetchListing()
+  }, [])
+
   return (
     <main className="max-w-4xl mx-auto p-4">
       <h2 className="font-semibold text-3xl text-center my-7">
-        Create Listing
+        Update Listing
       </h2>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-4">
@@ -287,7 +309,7 @@ export default function CreateListing() {
             }) 
            }
           <button disabled={loading || isUploadingImage} className="bg-slate-700 rounded-md uppercase text-white p-3 w-full hover:opacity-95 disabled:opacity-80">
-            { loading ? "Creating...." : "create listing" }
+            { loading ? "Updating...." : "Update listing" }
           </button>
           { error && <p className="text-red-700 text-sm">{error}</p> }
         </div>
