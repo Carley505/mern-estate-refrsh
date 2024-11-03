@@ -150,6 +150,8 @@ export default function CreateListing() {
             type="text"
             id="name"
             placeholder="Name"
+            maxLength={62}
+            minLength={10}
             required
             onChange={handleChange}
             value={formData.name}
@@ -159,8 +161,6 @@ export default function CreateListing() {
             placeholder="Description"
             type="textarea"
             id="description"
-            maxLength={62}
-            minLength={10}
             required
             onChange={handleChange}
             value={formData.description}
