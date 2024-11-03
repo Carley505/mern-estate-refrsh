@@ -71,3 +71,15 @@ export const deleteUserListing = async(req, res, next)=>{
         next(error)
     }
 }
+
+export const getUser = async(req, res, next) =>{
+    const userId = req.params.id
+    try {
+      const user = await User.findById(userId)
+      if(!user) return next(errorHandler(404, "User Not Found!"))
+      const { password: pass, ...rest } = user._doc
+      res.status(200).json(rest)
+    } catch (error) {
+        next(error)
+    }
+}
