@@ -4,18 +4,16 @@ import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function CreateListing() {
+export default function CreateBicycle() {
 
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: '',
+    model: '',
     description: '',
     address: '',
+    category: 'road',
+    condition: 'good',
     type: 'rent',
-    parking: false,
-    furnished: false,
-    bathRooms: 1,
-    bedRooms: 1,
     offer: false,
     regularPrice: 50,
     discountPrice: 0,
@@ -91,7 +89,7 @@ export default function CreateListing() {
         type: e.target.id
       })
     }
-    if(e.target.id === "parking" || e.target.id === "furnished" || e.target.id === "offer"){
+    if(e.target.id === "offer"){
       setFormData({
         ...formData,
         [e.target.id]: e.target.checked,
@@ -103,14 +101,20 @@ export default function CreateListing() {
         [e.target.id]: e.target.value,
       })
     }
+    if(e.target.id === "category" || e.target.id === "condition"){
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value
+      })
+    }
   }
 
   const handleSubmit = async(e) =>{
     e.preventDefault()
 
     if(formData.imageUrls.length < 1) return setError("You Must upload atleast one image!")
-    if(formData.discountPrice > formData.regularPrice) return setError("Discount price Must be lower than Regular price.")
-    const url = '/api/listing/create';
+    if(+formData.discountPrice > +formData.regularPrice) return setError("Discount price Must be lower than Regular price.")
+    const url = '/api/user/bicycles';
     setLoading(true)
     setError(null)
     await fetch(url, {
@@ -130,7 +134,7 @@ export default function CreateListing() {
       }else{
         setLoading(false)
         setError(null)
-        navigate(`/listing/${data._id}`)
+        navigate(`/bicycle/${data._id}`)
       }
     }).catch((error)=>{
       setError(error.message)
@@ -138,6 +142,7 @@ export default function CreateListing() {
     })
   }
 
+  console.log(formData)
   return (
     <main className="max-w-4xl mx-auto p-4">
       <h2 className="font-semibold text-3xl text-center my-7">
@@ -148,13 +153,13 @@ export default function CreateListing() {
           <input
             className="p-2 rounded-md focus:outline-none border"
             type="text"
-            id="name"
-            placeholder="Name"
+            id="model"
+            placeholder="Model"
             maxLength={62}
             minLength={10}
             required
             onChange={handleChange}
-            value={formData.name}
+            value={formData.model}
           />
           <textarea
             className="p-2 rounded-md min-h-22 focus:outline-none border"
@@ -183,44 +188,42 @@ export default function CreateListing() {
               <input className="h-6 w-6" type="checkbox" id="rent" onChange={handleChange} checked={formData.type === "rent"} />
               <span>Rent</span>
             </label>
-            <label className="flex items-center space-x-2" htmlFor="parking">
-              <input className="h-6 w-6" type="checkbox" id="parking" onChange={handleChange} checked={formData.parking} />
-              <span>Parking Spot</span>
-            </label>
-            <label className="flex items-center space-x-2" htmlFor="furnished">
-              <input className="h-6 w-6" type="checkbox" id="furnished" onChange={handleChange} checked={formData.furnished} />
-              <span>Furnished</span>
-            </label>
             <label className="flex items-center space-x-2" htmlFor="offer">
               <input className="h-6 w-6" type="checkbox" id="offer" onChange={handleChange} checked={formData.offer} />
               <span>Offer</span>
             </label>
           </div>
+          {/* -------- CATEGORY --------- */}
+          <div className="flex items-center">
+            <span>Category: {' '}</span>
+            <select 
+             defaultValue="road"
+             id="category"
+             onClick={handleChange}
+             className="border rounded-lg p-2 w-full"
+            >
+              <option value="mountain">Mountain</option>
+              <option value="road">Road</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="electric">Electric</option>
+            </select>
+          </div>
+          <div className="flex items-center">
+            <span>Condition: {' '}</span>
+            <select 
+             defaultValue="good"
+             id="condition"
+             onClick={handleChange}
+             className="border rounded-lg p-2 w-full"
+            >
+              <option value="poor">Poor</option>
+              <option value="fair">Fair</option>
+              <option value="good">Good</option>
+              <option value="very good">Very Good</option>
+              <option value="excellent">Excellent</option>
+            </select>
+          </div>
           <div className="flex flex-row gap-4 flex-wrap justify-self-start">
-            <label className="flex items-center space-x-2" htmlFor="bedRooms">
-              <input
-                className="h-10 w-12 pl-2 border"
-                type="number"
-                id="bedRooms"
-                min={1}
-                max={10}
-                onChange={handleChange}
-                value={formData.bedRooms}
-              />
-              <span>Beds</span>
-            </label>
-            <label className="flex items-center space-x-2" htmlFor="bathRooms">
-              <input
-                className="h-10 w-12 pl-2"
-                type="number"
-                id="bathRooms"
-                min={1}
-                max={10}
-                onChange={handleChange}
-                value={formData.bathRooms}
-              />
-              <span>Baths</span>
-            </label>
             <label
               className="flex items-center space-x-2"
               htmlFor="regularPrice"
@@ -236,7 +239,7 @@ export default function CreateListing() {
               />
               <p className="flex flex-col items-center">
                 <span>Regular Price</span>
-                <span hidden={formData.type === "sell"} className="text-xs">($ / Month)</span>
+                <span hidden={formData.type === "sell"} className="text-xs">(Kshs / Day)</span>
               </p>
             </label>
            { formData.offer && (
@@ -255,7 +258,7 @@ export default function CreateListing() {
               />
               <p className="flex flex-col items-center">
                 <span>Discount Price</span>
-                <span hidden={formData.type === "sell"} className="text-xs">($ / Month)</span>
+                <span hidden={formData.type === "sell"} className="text-xs">(Kshs / Day)</span>
               </p>
             </label>
            ) }
@@ -287,7 +290,7 @@ export default function CreateListing() {
             }) 
            }
           <button disabled={loading || isUploadingImage} className="bg-slate-700 rounded-md uppercase text-white p-3 w-full hover:opacity-95 disabled:opacity-80">
-            { loading ? "Creating...." : "create listing" }
+            { loading ? "Creating...." : "create bicycle" }
           </button>
           { error && <p className="text-red-700 text-sm">{error}</p> }
         </div>

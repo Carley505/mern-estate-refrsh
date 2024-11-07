@@ -11,28 +11,27 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import "swiper/css/bundle";
 
 import {
-  FaBath,
-  FaBed,
-  FaChair,
   FaMapMarkerAlt,
-  FaParking,
   FaShare,
 } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import BicycleStars from "../components/BicycleStars";
 
-export default function ListingPage() {
-  const [listing, setListing] = useState(null);
+export default function BicyclePage() {
+  const [bicycle, setBicycle] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
 
+  console.log(bicycle);
+
   const { currentUser } = useSelector((state) => state.user);
 
   const params = useParams();
   useEffect(() => {
-    const listingId = params.listingId;
-    const url = `/api/listing/getListing/${listingId}`;
+    const bicycleId = params.bicycleId;
+    const url = `/api/bicycle/${bicycleId}`;
     const fetchListing = async () => {
       setLoading(true);
       setError(false);
@@ -46,7 +45,7 @@ export default function ListingPage() {
             setError(true);
             return;
           }
-          setListing(data);
+          setBicycle(data);
           setLoading(false);
           setError(false);
         })
@@ -56,16 +55,15 @@ export default function ListingPage() {
         });
     };
     fetchListing();
-  }, [params.listingId]);
+  }, [params.bicycleId]);
 
-  console.log(loading);
   return (
     <main>
       {loading && <p className="text-center mt-7 text-2xl">Loading....</p>}
       {error && (
         <p className="text-center mt-7 text-2xl">Something Went Wrong!</p>
       )}
-      {listing && !loading && !error && (
+      {bicycle && !loading && !error && (
         <>
           <Swiper
             //    import swiper modules
@@ -75,10 +73,10 @@ export default function ListingPage() {
             navigation
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log("slide change")}
+            // onSwiper={(swiper) => console.log(swiper)}
           >
-            {listing.imageUrls.map((url) => {
+            {bicycle.imageUrls.map((url) => {
               return (
                 <SwiperSlide key={url}>
                   <div
@@ -109,28 +107,29 @@ export default function ListingPage() {
               Link copied
             </p>
           )}
+          {/* ================= INFRO  ================= */}
           <div className="max-w-4xl mx-auto space-y-4 p-4">
             <h2 className="font-semibold text-2xl">
-              {listing.name} - ${" "}
-              {listing.offer
-                ? listing.discountPrice.toLocaleString("en-US")
-                : listing.regularPrice.toLocaleString("en-US")}
-              {listing.type === "rent" && " /month"}
+              {bicycle.model} - Kshs{" "}
+              {bicycle.offer
+                ? bicycle.discountPrice.toLocaleString("en-US")
+                : bicycle.regularPrice.toLocaleString("en-US")}
+              {bicycle.type === "rent" && " / Day"}
             </h2>
             <div className="space-y-1">
               <p className="flex items-center gap-2 font-semibold text-sm">
                 <FaMapMarkerAlt className="text-green-700" />
-                <span className="text-slate-600">{listing.address}</span>
+                <span className="text-slate-600">{bicycle.address}</span>
               </p>
               <div className="flex gap-4">
                 <p className="bg-red-700 text-white w-full max-w-[200px] py-1 rounded-md text-center">
-                  {listing.type === "rent" ? "For Rent" : "For Sale"}
+                  {bicycle.type === "rent" ? "For Rent" : "For Sale"}
                 </p>
-                {listing.offer && (
+                {bicycle.offer && (
                   <p className="bg-green-700 text-white w-full max-w-[200px] py-1 rounded-md text-center">
-                    $
+                    Kshs
                     {(
-                      +listing.regularPrice - +listing.discountPrice
+                      +bicycle.regularPrice - +bicycle.discountPrice
                     ).toLocaleString("en-US")}{" "}
                     OFF
                   </p>
@@ -140,39 +139,23 @@ export default function ListingPage() {
             <div className="space-y-2">
               <p>
                 <span className="font-semibold">Description - </span>
-                {listing.description}
+                {bicycle.description}
               </p>
-              <div className="text-green-900 font-semibold text-sm flex justify-self-start gap-4 flex-wrap">
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <FaBed className="text-lg" />
-                  <p>
-                    {listing.bedRooms}
-                    {listing.bedRooms !== 1 ? " Beds" : " Bed"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <FaBath className="text-lg" />
-                  <p>
-                    {listing.bathRooms}
-                    {listing.bathRooms !== 1 ? " Baths" : " Bath"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <FaParking className="text-lg" />
-                  <p>{listing.parking ? " Parking" : " No Parking"}</p>
-                </div>
-                <div className="flex items-center gap-1 whitespace-nowrap">
-                  <FaChair className="text-lg" />
-                  <p>{listing.furnished ? " Furnished" : " Unfurnished"}</p>
-                </div>
+              <div className="flex items-center">
+                <label className="font-semibold">Condition:</label>
+                <BicycleStars condition={bicycle.condition}/>
               </div>
             </div>
-            {
-              currentUser && listing.userRef !== currentUser._id && !contact && (
-                <button onClick={()=>setContact(true)} className="w-full bg-slate-700 uppercase text-white rounded-md py-2 hover:opacity-95" type="button">Contact renter</button>
-              )
-            }
-            {contact && <Contact listing={listing} />}
+            {currentUser && bicycle.userRef !== currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="w-full bg-slate-700 uppercase text-white rounded-md py-2 hover:opacity-95"
+                type="button"
+              >
+                Contact renter
+              </button>
+            )}
+            {contact && <Contact bicycle={bicycle} />}
           </div>
         </>
       )}

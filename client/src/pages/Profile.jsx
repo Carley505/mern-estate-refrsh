@@ -27,9 +27,9 @@ export const Profile = () => {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formUpdate, setFormUpdate] = useState(false);
 
-  const [userListings, setUserListings] = useState([])
+  const [userBicycles, setUserBicycles] = useState([])
 
-  console.log(userListings)
+  console.log(userBicycles)
 
   const fileRef = useRef(null);
 
@@ -151,27 +151,28 @@ export const Profile = () => {
       }
     );
   };
+  // ----- USER BICYCLES -----
   const handleShowListings = async() =>{
-    const url = `/api/user/listings/${currentUser._id}`
+    const url = `/api/user/bicycles/${currentUser._id}`
 
     await fetch(url).then((response)=>{
       return response.json()
     }).then((data)=>{
-      setUserListings(data)
+      setUserBicycles(data)
     }).catch((error)=>{
       console.log(error.message)
     })
   }
 
-  const handleDeleteUserListing = async(listing) =>{
-    const url = `/api/user/listings/${currentUser._id}/delete/${listing._id}`;
+  const handleDeleteUserListing = async(bicycle) =>{
+    const url = `/api/user/bicycles/${bicycle._id}`;
 
     await fetch(url, {
       method: "DELETE",
     }).then((response)=>{
       return response.json()
     }).then((data)=>{
-      setUserListings((prev)=>prev.filter((item)=>item._id !== listing._id))
+      setUserBicycles((prev)=>prev.filter((item)=>item._id !== bicycle._id))
     }).catch((error)=>{
       console.log(error)
     })
@@ -241,7 +242,7 @@ export const Profile = () => {
           </button>
           <Link
             className="bg-green-700 text-white p-4 text-center rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-            to="/create-listing"
+            to="/create-bicycle"
           >
             {"Create Listing"}
           </Link>
@@ -261,26 +262,27 @@ export const Profile = () => {
           ""
         )}
       </div>
+      {/* ================ USER LISTINGS =============== */}
       <div>
         <button onClick={handleShowListings} className="text-green-700 w-full" type="button">show listings</button>
          {
-          userListings && userListings.length > 0 &&
+          userBicycles && userBicycles.length > 0 &&
            (
             <div className="">
             <h2 className="font-semibold text-2xl text-center mt-7">Your Listings</h2>
               {
-                userListings.map((listing)=>{
+                userBicycles.map((bicycle)=>{
                 return(
-                  <div className="flex justify-between items-center p-2 gap-4 border rounded-lg" key={listing._id}>
-                  <Link to={`/listing/${listing._id}`}>
-                  <img className="h-20 w-20 object-contain rounded-lg" src={listing.imageUrls[0]} alt='image'/>
+                  <div className="flex justify-between items-center p-2 gap-4 border rounded-lg" key={bicycle._id}>
+                  <Link to={`/bicycle/${bicycle._id}`}>
+                  <img className="h-20 w-20 object-contain rounded-lg" src={bicycle.imageUrls[0]} alt='image'/>
                   </Link>
-                  <Link  className="flex-1 text-slate-700 font-semibold hover:underline truncate" to={`/listing/${listing._id}`}>
-                  <h2>{listing.name}</h2>
+                  <Link  className="flex-1 text-slate-700 font-semibold hover:underline truncate" to={`/bicycle/${bicycle._id}`}>
+                  <h2>{bicycle.model}</h2>
                   </Link>
                   <div className="flex flex-col gap-2">
-                    <button onClick={()=>handleDeleteUserListing(listing)} className="uppercase text-red-700" type="button">Delete</button>
-                   <Link to={`/update-listing/${listing._id}`}>
+                    <button onClick={()=>handleDeleteUserListing(bicycle)} className="uppercase text-red-700" type="button">Delete</button>
+                   <Link to={`/update-bicycle/${bicycle._id}`}>
                     <button className="uppercase text-green-700" type="button">edit</button>
                    </Link>
                   </div>

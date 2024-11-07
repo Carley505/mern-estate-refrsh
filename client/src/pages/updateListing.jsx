@@ -10,14 +10,11 @@ export default function UpdateListing() {
 
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: '',
+    model: '',
     description: '',
     address: '',
+    category: 'road',
     type: 'rent',
-    parking: false,
-    furnished: false,
-    bathRooms: 1,
-    bedRooms: 1,
     offer: false,
     regularPrice: 50,
     discountPrice: 0,
@@ -94,7 +91,7 @@ export default function UpdateListing() {
         type: e.target.id
       })
     }
-    if(e.target.id === "parking" || e.target.id === "furnished" || e.target.id === "offer"){
+    if(e.target.id === "offer"){
       setFormData({
         ...formData,
         [e.target.id]: e.target.checked,
@@ -106,6 +103,12 @@ export default function UpdateListing() {
         [e.target.id]: e.target.value,
       })
     }
+    if(e.target.id === "category"){
+      setFormData({
+        ...formData,
+        category: e.target.value
+      })
+    }
   }
 
   const handleSubmit = async(e) =>{
@@ -113,7 +116,7 @@ export default function UpdateListing() {
 
     if(formData.imageUrls.length < 1) return setError("You Must upload atleast one image!")
     if(formData.discountPrice > formData.regularPrice) return setError("Discount price Must be lower than Regular price.")
-    const url = `/api/listing/update/${params.listingId}`;
+    const url = `/api/user/bicycles/${params.bicycleId}`;
     setLoading(true)
     setError(null)
     await fetch(url, {
@@ -133,7 +136,7 @@ export default function UpdateListing() {
       }else{
         setLoading(false)
         setError(null)
-        navigate(`/listing/${data._id}`)
+        navigate(`/bicycle/${data._id}`)
       }
     }).catch((error)=>{
       setError(error.message)
@@ -142,8 +145,8 @@ export default function UpdateListing() {
   }
 
   useEffect(()=>{
-    const listingId = params.listingId
-    const url = `/api/listing/getListing/${listingId}`
+    const bicycleId = params.bicycleId
+    const url = `/api/bicycle/${bicycleId}`
     const fetchListing = async()=>{
       await fetch(url).then((response)=>{
         return response.json()
@@ -159,7 +162,7 @@ export default function UpdateListing() {
     }
     fetchListing()
   }, [])
-
+  console.log(formData)
   return (
     <main className="max-w-4xl mx-auto p-4">
       <h2 className="font-semibold text-3xl text-center my-7">
@@ -170,13 +173,13 @@ export default function UpdateListing() {
           <input
             className="p-2 rounded-md focus:outline-none border"
             type="text"
-            id="name"
-            placeholder="Name"
+            id="model"
+            placeholder="Model"
             maxLength={62}
             minLength={10}
             required
             onChange={handleChange}
-            value={formData.name}
+            value={formData.model}
           />
           <textarea
             className="p-2 rounded-md min-h-22 focus:outline-none border"
@@ -205,44 +208,27 @@ export default function UpdateListing() {
               <input className="h-6 w-6" type="checkbox" id="rent" onChange={handleChange} checked={formData.type === "rent"} />
               <span>Rent</span>
             </label>
-            <label className="flex items-center space-x-2" htmlFor="parking">
-              <input className="h-6 w-6" type="checkbox" id="parking" onChange={handleChange} checked={formData.parking} />
-              <span>Parking Spot</span>
-            </label>
-            <label className="flex items-center space-x-2" htmlFor="furnished">
-              <input className="h-6 w-6" type="checkbox" id="furnished" onChange={handleChange} checked={formData.furnished} />
-              <span>Furnished</span>
-            </label>
             <label className="flex items-center space-x-2" htmlFor="offer">
               <input className="h-6 w-6" type="checkbox" id="offer" onChange={handleChange} checked={formData.offer} />
               <span>Offer</span>
             </label>
           </div>
+           {/* -------- CATEGORY --------- */}
+           <div className="flex items-center">
+            <span>Category: {' '}</span>
+            <select 
+             defaultValue="road"
+             id="category"
+             onClick={handleChange}
+             className="border rounded-lg p-2 w-full"
+            >
+              <option value="mountain">Mountain</option>
+              <option value="road">Road</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="electric">Electric</option>
+            </select>
+          </div>
           <div className="flex flex-row gap-4 flex-wrap justify-self-start">
-            <label className="flex items-center space-x-2" htmlFor="bedRooms">
-              <input
-                className="h-10 w-12 pl-2 border"
-                type="number"
-                id="bedRooms"
-                min={1}
-                max={10}
-                onChange={handleChange}
-                value={formData.bedRooms}
-              />
-              <span>Beds</span>
-            </label>
-            <label className="flex items-center space-x-2" htmlFor="bathRooms">
-              <input
-                className="h-10 w-12 pl-2"
-                type="number"
-                id="bathRooms"
-                min={1}
-                max={10}
-                onChange={handleChange}
-                value={formData.bathRooms}
-              />
-              <span>Baths</span>
-            </label>
             <label
               className="flex items-center space-x-2"
               htmlFor="regularPrice"
@@ -258,7 +244,7 @@ export default function UpdateListing() {
               />
               <p className="flex flex-col items-center">
                 <span>Regular Price</span>
-                <span hidden={formData.type === "sell"} className="text-xs">($ / Month)</span>
+                <span hidden={formData.type === "sell"} className="text-xs">(Kshs / Day)</span>
               </p>
             </label>
            { formData.offer && (
@@ -277,7 +263,7 @@ export default function UpdateListing() {
               />
               <p className="flex flex-col items-center">
                 <span>Discount Price</span>
-                <span hidden={formData.type === "sell"} className="text-xs">($ / Month)</span>
+                <span hidden={formData.type === "sell"} className="text-xs">(Kshs / Day)</span>
               </p>
             </label>
            ) }
@@ -309,7 +295,7 @@ export default function UpdateListing() {
             }) 
            }
           <button disabled={loading || isUploadingImage} className="bg-slate-700 rounded-md uppercase text-white p-3 w-full hover:opacity-95 disabled:opacity-80">
-            { loading ? "Updating...." : "Update listing" }
+            { loading ? "Updating...." : "Update bicycle" }
           </button>
           { error && <p className="text-red-700 text-sm">{error}</p> }
         </div>

@@ -1,10 +1,10 @@
 
-import mongoose from "mongoose";
 
+import mongoose from "mongoose";
 const { Schema, model } = mongoose
 
-const listingSchema = new Schema({
-    name: {
+const bookSchema = new Schema({
+    model: {
         type: String,
         required: true,
     },
@@ -16,33 +16,27 @@ const listingSchema = new Schema({
         type: String,
         required: true,
     },
+    category: {
+        type: String,
+        enum: ['mountain', 'road', 'hybrid', 'electric'],
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: ['sell', 'rent'],
+        required: true,
+    },
+    condition:{
+        type: String,
+        enum: ["poor", "fair", "good", "very good", "excellent"],
+        default: "good",
+    },
     regularPrice: {
         type: Number,
         required: true,
     },
     discountPrice: {
         type: Number,
-        required: true,
-    },
-    bathRooms: {
-        type: Number,
-        required: true,
-    }
-    ,
-    bedRooms: {
-        type: Number,
-        required: true,
-    },
-    furnished: {
-        type: Boolean,
-        required: true,
-    },
-    parking: {
-        type: Boolean,
-        required: true,
-    },
-    type: {
-        type: String,
         required: true,
     },
     offer: {
@@ -61,6 +55,7 @@ const listingSchema = new Schema({
 { timestamps: true }
 );
 
-const Listing = model("Listing", listingSchema)
 
-export default Listing
+const Bicycle = model('Bicycle', bookSchema)
+
+export default Bicycle;
