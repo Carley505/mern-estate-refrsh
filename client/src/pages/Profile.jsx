@@ -29,8 +29,6 @@ export const Profile = () => {
 
   const [userBicycles, setUserBicycles] = useState([])
 
-  console.log(userBicycles)
-
   const fileRef = useRef(null);
 
   const { loading, error, currentUser } = useSelector((state) => state.user);
@@ -240,12 +238,26 @@ export const Profile = () => {
           >
             {loading ? "Loading..." : "Update"}
           </button>
-          <Link
+         {
+          currentUser.isAdmin && (
+            <Link
+            className="bg-sky-700 text-white p-4 text-center rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+            to="/admin-users"
+          >
+            {"View Users"}
+          </Link>
+          )
+         }
+         {
+          currentUser.isAdmin && (
+            <Link
             className="bg-green-700 text-white p-4 text-center rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
             to="/create-bicycle"
           >
             {"Create Listing"}
           </Link>
+          )
+         }
         </form>
         <div className="text-red-700 mt-4 flex justify-between">
           <span className="cursor-pointer" onClick={handleDelete}>
@@ -264,7 +276,7 @@ export const Profile = () => {
       </div>
       {/* ================ USER LISTINGS =============== */}
       <div>
-        <button onClick={handleShowListings} className="text-green-700 w-full" type="button">show listings</button>
+        { currentUser.isAdmin && (<button onClick={handleShowListings} className="text-green-700 w-full" type="button">show listings</button>) }
          {
           userBicycles && userBicycles.length > 0 &&
            (

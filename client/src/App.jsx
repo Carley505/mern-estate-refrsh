@@ -3,7 +3,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home  from './pages/Home'
-import { About } from './pages/About'
+import About from './pages/About'
 import { Profile } from './pages/Profile'
 import { SignIn } from './pages/SignIn'
 import { SignUp } from './pages/SignUp'
@@ -13,6 +13,7 @@ import CreateBicycle from './pages/createBicycle'
 import UpdateListing from './pages/updateListing'
 import BicyclePage from './pages/BicyclePage'
 import SearchPage from './pages/SearchPage'
+import AdminPageUsers from './pages/adminPageUsers'
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route element={<PrivateRoute/>}>
          <Route path='/profile' element={<Profile/>}/>
          <Route path='/create-bicycle' element={<CreateBicycle/>}/>
+         <Route path='/admin-users' element={<AdminPageUsers/>}/>
          <Route path='/update-bicycle/:bicycleId' element={<UpdateListing/>}/>
         </Route>
         <Route path='/sign-in' element={<SignIn/>}/>

@@ -2,6 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
+import { FaBicycle } from "react-icons/fa6";
 import BicycleStars from "./BicycleStars";
 
 export default function BicycleItem({ bicycle }) {
@@ -38,7 +39,16 @@ export default function BicycleItem({ bicycle }) {
           </p>
           <div className="flex items-center">
             <label className="font-semibold text-sm">Condition: </label>
-            <BicycleStars condition={bicycle.condition}/>
+            <BicycleStars condition={bicycle.condition} />
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="font-semibold">Group:</label>
+            <span className="flex gap-1 text-sky-800">
+              <FaBicycle className="h-6 w-6" />
+              <span className="font-semibold">
+                {bicycle.group === "kid" ? "Kids" : "Adults"}
+              </span>
+            </span>
           </div>
         </div>
       </Link>

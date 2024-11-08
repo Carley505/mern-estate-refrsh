@@ -3,16 +3,18 @@ import BicycleItem from "../components/BicycleItem";
 import { useNavigate } from "react-router-dom";
 
 export default function SearchPage() {
-  const [sidebardata, setSidebardata] = useState({
+  const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     type: "all",
     category: "all",
+    group: "all",
     condition: "very good",
     offer: false,
     sort: "created_at",
     order: "desc",
   });
 
+  console.log(sidebarData)
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +40,7 @@ export default function SearchPage() {
       sortFromUrl ||
       orderFromUrl
     ) {
-      setSidebardata({
+      setSidebarData({
         searchTerm: searchTermFromUrl || "",
         type: typeFromUrl || "all",
         parking: parkingFromUrl === "true" ? true : false,
@@ -73,23 +75,23 @@ export default function SearchPage() {
       e.target.id === "rent" ||
       e.target.id === "sale"
     ) {
-      setSidebardata({ ...sidebardata, type: e.target.id });
+      setSidebarData({ ...sidebarData, type: e.target.id });
+    }
+console.log(e.target.id)
+    if (e.target.id === "all" || 
+      e.target.id === "mountain" ||
+      e.target.id === "road" ||
+      e.target.id === "hybrid" ||
+      e.target.id === "electric"
+    ) {
+      setSidebarData({
+        ...sidebarData,
+        category: e.target.id,
+      })
     }
 
     if (e.target.id === "searchTerm") {
-      setSidebardata({ ...sidebardata, searchTerm: e.target.value });
-    }
-
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
-      setSidebardata({
-        ...sidebardata,
-        [e.target.id]:
-          e.target.checked || e.target.checked === "true" ? true : false,
-      });
+      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
     }
 
     if (e.target.id === "sort_order") {
@@ -97,20 +99,20 @@ export default function SearchPage() {
 
       const order = e.target.value.split("_")[1] || "desc";
 
-      setSidebardata({ ...sidebardata, sort, order });
+      setSidebarData({ ...sidebarData, sort, order });
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
-    urlParams.set("searchTerm", sidebardata.searchTerm);
-    urlParams.set("type", sidebardata.type);
-    urlParams.set("parking", sidebardata.parking);
-    urlParams.set("furnished", sidebardata.furnished);
-    urlParams.set("offer", sidebardata.offer);
-    urlParams.set("sort", sidebardata.sort);
-    urlParams.set("order", sidebardata.order);
+    urlParams.set("searchTerm", sidebarData.searchTerm);
+    urlParams.set("type", sidebarData.type);
+    urlParams.set("parking", sidebarData.parking);
+    urlParams.set("furnished", sidebarData.furnished);
+    urlParams.set("offer", sidebarData.offer);
+    urlParams.set("sort", sidebarData.sort);
+    urlParams.set("order", sidebarData.order);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
@@ -139,9 +141,9 @@ export default function SearchPage() {
             <input
               type="text"
               id="searchTerm"
-              placeholder="Search..."
+              placeholder="Search our Web..."
               className="border rounded-lg p-3 w-full"
-              value={sidebardata.searchTerm}
+              value={sidebarData.searchTerm}
               onChange={handleChange}
             />
           </div>
@@ -153,7 +155,7 @@ export default function SearchPage() {
                 id="all"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.type === "all"}
+                checked={sidebarData.type === "all"}
               />
               <span>Rent & Sale</span>
             </div>
@@ -163,7 +165,7 @@ export default function SearchPage() {
                 id="rent"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.type === "rent"}
+                checked={sidebarData.type === "rent"}
               />
               <span>Rent</span>
             </div>
@@ -173,7 +175,7 @@ export default function SearchPage() {
                 id="sale"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.type === "sale"}
+                checked={sidebarData.type === "sale"}
               />
               <span>Sale</span>
             </div>
@@ -183,11 +185,12 @@ export default function SearchPage() {
                 id="offer"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.offer}
+                checked={sidebarData.offer}
               />
               <span>Offer</span>
             </div>
           </div>
+          {/* ====== Category ===== */}
           <div className="flex gap-2 flex-wrap items-center">
             <label className="font-semibold">Category:</label>
             <div className="flex gap-2">
@@ -196,7 +199,7 @@ export default function SearchPage() {
                 id="all"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.category}
+                checked={sidebarData.category = "all"}
               />
               <span>All</span>
             </div>
@@ -206,17 +209,17 @@ export default function SearchPage() {
                 id="mountain"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.category}
+                checked={sidebarData.category === "mountain"}
               />
               <span>Mountain</span>
             </div>
             <div className="flex gap-2">
               <input
                 type="checkbox"
-                id="mountain"
+                id="hybrid"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.category}
+                checked={sidebarData.category === "hybrid"}
               />
               <span>Hybrid</span>
             </div>
@@ -226,7 +229,7 @@ export default function SearchPage() {
                 id="road"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.category}
+                checked={sidebarData.category === "road"}
               />
               <span>Road</span>
             </div>
@@ -236,9 +239,42 @@ export default function SearchPage() {
                 id="electric"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebardata.category}
+                checked={sidebarData.category === "electric"}
               />
               <span>Electric</span>
+            </div>
+          </div>
+          <div className="flex gap-2 flex-wrap items-center">
+            <label className="font-semibold">Group:</label>
+            <div className="flex gap-2">
+              <input
+                type="checkbox"
+                id="all"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebarData.group === "all"}
+              />
+              <span>All</span>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="checkbox"
+                id="kid"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebarData.group === "kid"}
+              />
+              <span>Kids</span>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="checkbox"
+                id="adult"
+                className="w-5"
+                onChange={handleChange}
+                checked={sidebarData.group === "adult"}
+              />
+              <span>Adult</span>
             </div>
           </div>
           <div className="flex items-center gap-2">

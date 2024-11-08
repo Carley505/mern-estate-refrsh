@@ -47,11 +47,30 @@ export const getUser = async(req, res, next) =>{
     }
 }
 
+export const getUsers = async(req, res, next) =>{
+    try {
+      const users = await User.find()
+      if(!users) return next(errorHandler(404, "No user Found!"))
+      res.status(200).json(users)
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const deleteUser = async(req, res, next)=>{
     if(req.user.id !== req.params.id) return next(errorHandler(401, "You can Only delete your own account!"))
      try {
         await User.findByIdAndDelete(req.params.id)
         res.clearCookie('access_token')
+        res.status(200).json('User has been deleted.')
+     } catch (error) {
+        next(error)
+     }
+}
+
+export const adminDeleteUser = async(req, res, next)=>{
+     try {
+        await User.findByIdAndDelete(req.params.id)
         res.status(200).json('User has been deleted.')
      } catch (error) {
         next(error)

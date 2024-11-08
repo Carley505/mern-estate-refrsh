@@ -16,6 +16,11 @@ const bookSchema = new Schema({
         type: String,
         required: true,
     },
+    group: {
+        type: String,
+        enum: ["adult", "kid"],
+        default: "adult",
+    },
     category: {
         type: String,
         enum: ['mountain', 'road', 'hybrid', 'electric'],

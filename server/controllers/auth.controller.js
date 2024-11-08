@@ -5,11 +5,11 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 export const signup = async(req, res, next) =>{
-    const { username, email, password } = req.body
+    const { username, email, password, isAdmin } = req.body
     
     try {
         const hashPassword = bcrypt.hashSync(password, 10)
-        const newUser = new User({ username, email, password: hashPassword })
+        const newUser = new User({ username, email, password: hashPassword, isAdmin })
         await newUser.save()
         res.status(200).json({ message: "User added Successfully." })
     } catch (error) {

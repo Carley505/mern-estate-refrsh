@@ -10,10 +10,8 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 // import swiper styles
 import "swiper/css/bundle";
 
-import {
-  FaMapMarkerAlt,
-  FaShare,
-} from "react-icons/fa";
+import { FaMapMarkerAlt, FaShare } from "react-icons/fa";
+import { FaBicycle } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import BicycleStars from "../components/BicycleStars";
 
@@ -56,6 +54,30 @@ export default function BicyclePage() {
     };
     fetchListing();
   }, [params.bicycleId]);
+
+  
+  useEffect(() => {
+    // Ensure the map container element exists
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer || !window.L || !window.L.mapquest) return;
+
+    // Replace 'YOUR_API_KEY' with your actual MapQuest API key
+    // window.L.mapquest.key = import.meta.env.MAPQUEST_API_KEY;
+    window.L.mapquest.key = "XTjPEm1X6U5Tn9fU02evmMy2VXwjnhVV";
+
+    // Create a map
+    const map = window.L.mapquest.map('map', {
+      center: [37.7749, -122.4194], // Set initial coordinates
+      layers: window.L.mapquest.tileLayer('map'), // Set the tile layer
+      zoom: 12,
+    });
+
+    // Add a marker
+    window.L.marker([37.7749, -122.4194], {
+      icon: window.L.mapquest.icons.marker(),
+      draggable: false,
+    }).addTo(map);
+  }, []);
 
   return (
     <main>
@@ -143,7 +165,16 @@ export default function BicyclePage() {
               </p>
               <div className="flex items-center">
                 <label className="font-semibold">Condition:</label>
-                <BicycleStars condition={bicycle.condition}/>
+                <BicycleStars condition={bicycle.condition} />
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="font-semibold">Group:</label>
+                <span className="flex gap-1 text-sky-800">
+                  <FaBicycle className="h-6 w-6" />
+                  <span className="font-semibold">
+                    {bicycle.group === "kid" ? "Kids" : "Adults"}
+                  </span>
+                </span>
               </div>
             </div>
             {currentUser && bicycle.userRef !== currentUser._id && !contact && (
@@ -156,6 +187,7 @@ export default function BicyclePage() {
               </button>
             )}
             {contact && <Contact bicycle={bicycle} />}
+            <div id="map" className="w-full h-[520px]"></div>
           </div>
         </>
       )}

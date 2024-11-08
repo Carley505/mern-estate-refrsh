@@ -12,6 +12,7 @@ export default function CreateBicycle() {
     description: '',
     address: '',
     category: 'road',
+    group: "adult",
     condition: 'good',
     type: 'rent',
     offer: false,
@@ -87,6 +88,12 @@ export default function CreateBicycle() {
       setFormData({
         ...formData,
         type: e.target.id
+      })
+    }
+    if(e.target.id === "kid" || e.target.id === "adult"){
+      setFormData({
+        ...formData,
+        group: e.target.id
       })
     }
     if(e.target.id === "offer"){
@@ -191,6 +198,17 @@ export default function CreateBicycle() {
             <label className="flex items-center space-x-2" htmlFor="offer">
               <input className="h-6 w-6" type="checkbox" id="offer" onChange={handleChange} checked={formData.offer} />
               <span>Offer</span>
+            </label>
+          </div>
+          <div className="flex flex-wrap justify-self-start gap-4">
+          <p>Group:</p>
+            <label className="flex items-center space-x-2" htmlFor="sell">
+              <input className="h-6 w-6" type="checkbox" id="kid" onChange={handleChange} checked={formData.group === "kid"} />
+              <span>Kids Bicycle</span>
+            </label>
+            <label className="flex items-center space-x-2" htmlFor="rent">
+              <input className="h-6 w-6" type="checkbox" id="adult" onChange={handleChange} checked={formData.group === "adult"} />
+              <span>Adult Bicycle</span>
             </label>
           </div>
           {/* -------- CATEGORY --------- */}

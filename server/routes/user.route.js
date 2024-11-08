@@ -1,7 +1,7 @@
 
 
 import express from "express"
-import { deleteUser, deleteUserBicycle, getUser, getUserBicycles, test, updateUser } from "../controllers/user.controller.js"
+import { adminDeleteUser, deleteUser, deleteUserBicycle, getUser, getUserBicycles, getUsers, test, updateUser } from "../controllers/user.controller.js"
 import { verifyToken } from "../utils/verifyUser.js"
 import { postBicyle, updateBicycle } from "../controllers/bicycle.controller.js"
 
@@ -11,7 +11,9 @@ router.get('/test', test)
 
 router.post('/update/:id', verifyToken, updateUser)
 router.delete('/delete/:id', verifyToken, deleteUser)
+router.delete('/admin/delete/:id', verifyToken, adminDeleteUser)
 router.get('/:id', getUser)
+router.get('/', getUsers)
 
 
 // bicycle routes related to an authenticated user
