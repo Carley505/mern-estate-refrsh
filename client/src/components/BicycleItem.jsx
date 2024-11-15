@@ -30,6 +30,9 @@ export default function BicycleItem({ bicycle }) {
           <p className="text-sm text-gray-600 line-clamp-2">
             {bicycle.description}
           </p>
+          <button type="button" className="bg-sky-600 w-14 text-white p-1 rounded-sm">
+            {bicycle.type === "rent" ? "Rent" : "Sale"}
+          </button>
           <p className="text-slate-500 mt-2 font-semibold ">
             Kshs
             {bicycle.offer

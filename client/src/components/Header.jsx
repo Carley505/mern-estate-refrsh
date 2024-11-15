@@ -40,8 +40,8 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className="bg-slate-200 shadow-md h-20">
-      <div className=" self-center max-w-6xl mx-auto p-3 md:h-16 flex flex-row justify-between items-center">
+    <header className="bg-slate-200 shadow-md max-w-[100vw]">
+      <div className="self-center w-[92%] mx-auto p-3 flex flex-row justify-between items-center">
         <Link to="/">
           <p className="font-extrabold text-sm sm:text-xl flex">
             <span className="text-slate-500">BICYCLE</span>

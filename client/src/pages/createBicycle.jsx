@@ -168,6 +168,10 @@ export default function CreateBicycle() {
             onChange={handleChange}
             value={formData.model}
           />
+          <input 
+             className="p-2 rounded-md focus:outline-none border"
+             placeholder="Model"
+          />
           <textarea
             className="p-2 rounded-md min-h-22 focus:outline-none border"
             placeholder="Description"

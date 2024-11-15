@@ -14,7 +14,7 @@ export default function SearchPage() {
     order: "desc",
   });
 
-  console.log(sidebarData)
+  console.log(sidebarData);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -25,27 +25,27 @@ export default function SearchPage() {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
     const typeFromUrl = urlParams.get("type");
-    const parkingFromUrl = urlParams.get("parking");
-    const furnishedFromUrl = urlParams.get("furnished");
-    const offerFromUrl = urlParams.get("offer");
+    const categoryFromUrl = urlParams.get("category");
+    const groupFromUrl = urlParams.get("group");
+    const conditionFromUrl = urlParams.get("condition");
     const sortFromUrl = urlParams.get("sort");
     const orderFromUrl = urlParams.get("order");
 
     if (
       searchTermFromUrl ||
       typeFromUrl ||
-      parkingFromUrl ||
-      furnishedFromUrl ||
-      offerFromUrl ||
+      categoryFromUrl ||
+      groupFromUrl ||
+      conditionFromUrl ||
       sortFromUrl ||
       orderFromUrl
     ) {
       setSidebarData({
         searchTerm: searchTermFromUrl || "",
         type: typeFromUrl || "all",
-        parking: parkingFromUrl === "true" ? true : false,
-        furnished: furnishedFromUrl === "true" ? true : false,
-        offer: offerFromUrl === "true" ? true : false,
+        category: categoryFromUrl || "all",
+        group: groupFromUrl || "all",
+        condition: conditionFromUrl || "very good",
         sort: sortFromUrl || "created_at",
         order: orderFromUrl || "desc",
       });
@@ -70,35 +70,36 @@ export default function SearchPage() {
   }, [location.search]);
 
   const handleChange = (e) => {
-    if (
-      e.target.id === "all" ||
-      e.target.id === "rent" ||
-      e.target.id === "sale"
-    ) {
-      setSidebarData({ ...sidebarData, type: e.target.id });
-    }
-console.log(e.target.id)
-    if (e.target.id === "all" || 
-      e.target.id === "mountain" ||
-      e.target.id === "road" ||
-      e.target.id === "hybrid" ||
-      e.target.id === "electric"
-    ) {
-      setSidebarData({
-        ...sidebarData,
-        category: e.target.id,
-      })
+    const { id, checked, value } = e.target;
+  
+    // Type Section
+    if (id === "type_all" || id === "rent" || id === "sale") {
+      setSidebarData({ ...sidebarData, type: id.replace("type_", "") });
     }
 
-    if (e.target.id === "searchTerm") {
-      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
+    // Type Section
+    if (id === "group_all" || id === "kid" || id === "adult") {
+      setSidebarData({ ...sidebarData, group: id.replace("group_", "") });
     }
-
-    if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "created_at";
-
-      const order = e.target.value.split("_")[1] || "desc";
-
+  
+    // Category Section
+    if (id === "category_all" || id === "mountain" || id === "hybrid" || id === "road" || id === "electric") {
+      setSidebarData({ ...sidebarData, category: id.replace("category_", "") });
+    }
+  
+    // Offer Checkbox
+    if (id === "offer") {
+      setSidebarData({ ...sidebarData, offer: checked });
+    }
+  
+    // Search Term
+    if (id === "searchTerm") {
+      setSidebarData({ ...sidebarData, searchTerm: value });
+    }
+  
+    // Sort Order
+    if (id === "sort_order") {
+      const [sort, order] = value.split("_");
       setSidebarData({ ...sidebarData, sort, order });
     }
   };
@@ -108,9 +109,9 @@ console.log(e.target.id)
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("type", sidebarData.type);
-    urlParams.set("parking", sidebarData.parking);
-    urlParams.set("furnished", sidebarData.furnished);
-    urlParams.set("offer", sidebarData.offer);
+    urlParams.set("category", sidebarData.category);
+    urlParams.set("group", sidebarData.group);
+    urlParams.set("condition", sidebarData.condition);
     urlParams.set("sort", sidebarData.sort);
     urlParams.set("order", sidebarData.order);
     const searchQuery = urlParams.toString();
@@ -152,7 +153,7 @@ console.log(e.target.id)
             <div className="flex gap-2">
               <input
                 type="checkbox"
-                id="all"
+                id="type_all"
                 className="w-5"
                 onChange={handleChange}
                 checked={sidebarData.type === "all"}
@@ -196,10 +197,10 @@ console.log(e.target.id)
             <div className="flex gap-2">
               <input
                 type="checkbox"
-                id="all"
+                id="category_all"
                 className="w-5"
                 onChange={handleChange}
-                checked={sidebarData.category = "all"}
+                checked={(sidebarData.category === "all")}
               />
               <span>All</span>
             </div>
@@ -249,7 +250,7 @@ console.log(e.target.id)
             <div className="flex gap-2">
               <input
                 type="checkbox"
-                id="all"
+                id="group_all"
                 className="w-5"
                 onChange={handleChange}
                 checked={sidebarData.group === "all"}
